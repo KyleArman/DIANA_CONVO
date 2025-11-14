@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unity Remote Control</title>
+</head>
+<body style="font-family:Arial;padding:40px">
+
+    <h2>Control Unity From GitHub Page</h2>
+
+    <button onclick="callUnity()">Press Button</button>
+
+    <p id="status">Waiting...</p>
+
+    <script>
+        function callUnity() {
+
+            const url = "https://YOUR_NGROK_URL.ngrok.io/btnPressed";
+
+            document.getElementById("status").innerText = "Sending...";
+
+            fetch(url)
+                .then(r => {
+                    if (r.ok) {
+                        document.getElementById("status").innerText = "Unity triggered!";
+                    } else {
+                        document.getElementById("status").innerText = "Unity not reachable.";
+                    }
+                })
+                .catch(e => {
+                    document.getElementById("status").innerText = "Error: " + e;
+                });
+        }
+    </script>
+
+</body>
+</html>
