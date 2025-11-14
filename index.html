@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Unity Remote Control</title>
+    <title>Unity WebSocket Control</title>
 </head>
-<body style="font-family:Arial;padding:40px">
-    <h2>Control Unity From GitHub Page</h2>
-    <button onclick="callUnity()">Press Button</button>
+<body>
+    <h2>Control Unity Cube via WebSocket</h2>
+    <button onclick="sendCommand()">Press Button</button>
     <p id="status">Waiting...</p>
 
     <script>
-        function callUnity() {
-            const url = "https://confiscable-isiah-unintuitable.ngrok-free.dev/btnPressed"; // replace with your ngrok HTTPS URL
-            document.getElementById("status").innerText = "Sending...";
+        // Replace with your HTTPS ngrok URL for WebSocket
+        const ws = new WebSocket("wss://confiscable-isiah-unintuitable.ngrok-free.dev");
 
-            fetch(url)
-                .then(r => {
-                    if (r.ok) {
-                        document.getElementById("status").innerText = "Unity triggered!";
-                    } else {
-                        document.getElementById("status").innerText = "Unity not reachable.";
-                    }
-                })
-                .catch(e => {
-                    document.getElementById("status").innerText = "Error: " + e;
-                });
+        ws.onopen = () => {
+            document.getElementById("status").innerText = "Connected to Unity!";
+            console.log("WebSocket connected");
+        };
+
+        ws.onclose = (e) => {
+            document.getElementById("status").innerText = "Disconnected";
+            console.log("WebSocket closed:", e);
+        };
+
+        ws.onerror = (err) => {
+            document.getElementById("status").innerText = "WebSocket error";
+            console.error("WebSocket error:", err);
+        };
+
+        ws.onmessage = (msg) => {
+            console.log("Message from Unity:", msg.data);
+        };
+
+        function sendCommand() {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send("BTN_PRESSED");
+                document.getElementById("status").innerText = "Command sent!";
+            } else {
+                document.getElementById("status").innerText = "WebSocket not connected";
+            }
         }
     </script>
 </body>
