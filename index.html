@@ -1,43 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Unity WebSocket Control</title>
+    <title>Local Network Unity Control</title>
 </head>
 <body>
-    <h2>Control Unity Cube via WebSocket</h2>
-    <button onclick="sendCommand()">Press Button</button>
+    <h2>Toggle Cube on Unity</h2>
+    <button onclick="sendRequest()">Press Button</button>
     <p id="status">Waiting...</p>
 
     <script>
-        // Replace with your HTTPS ngrok URL for WebSocket
-        const ws = new WebSocket("wss://confiscable-isiah-unintuitable.ngrok-free.dev");
+        // Replace LOCAL_IP with the IP shown in Unity console
+        const unityURL = "http://LOCAL_IP:8080/btnPressed";
 
-        ws.onopen = () => {
-            document.getElementById("status").innerText = "Connected to Unity!";
-            console.log("WebSocket connected");
-        };
-
-        ws.onclose = (e) => {
-            document.getElementById("status").innerText = "Disconnected";
-            console.log("WebSocket closed:", e);
-        };
-
-        ws.onerror = (err) => {
-            document.getElementById("status").innerText = "WebSocket error";
-            console.error("WebSocket error:", err);
-        };
-
-        ws.onmessage = (msg) => {
-            console.log("Message from Unity:", msg.data);
-        };
-
-        function sendCommand() {
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send("BTN_PRESSED");
-                document.getElementById("status").innerText = "Command sent!";
-            } else {
-                document.getElementById("status").innerText = "WebSocket not connected";
-            }
+        function sendRequest() {
+            fetch(unityURL)
+                .then(r => {
+                    if (r.ok) document.getElementById("status").innerText = "Cube toggled!";
+                    else document.getElementById("status").innerText = "Error sending request";
+                })
+                .catch(e => {
+                    document.getElementById("status").innerText = "Error: " + e;
+                });
         }
     </script>
 </body>
