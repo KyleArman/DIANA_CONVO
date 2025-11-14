@@ -4,18 +4,13 @@
     <title>Unity Remote Control</title>
 </head>
 <body style="font-family:Arial;padding:40px">
-
     <h2>Control Unity From GitHub Page</h2>
-
     <button onclick="callUnity()">Press Button</button>
-
     <p id="status">Waiting...</p>
 
     <script>
         function callUnity() {
-
-            const url = "https://YOUR_NGROK_URL.ngrok.io/btnPressed";
-
+            const url = "https://abcd1234.ngrok.io/btnPressed"; // replace with your ngrok HTTPS URL
             document.getElementById("status").innerText = "Sending...";
 
             fetch(url)
@@ -31,6 +26,5 @@
                 });
         }
     </script>
-
 </body>
 </html>
